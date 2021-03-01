@@ -1,5 +1,6 @@
 package portAventura_atraccions;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.InputMismatchException;
@@ -8,9 +9,10 @@ import java.util.Scanner;
 public class Principal {
 
     /**
-     * ***************MAIN**********************
+     * ***************MAIN
+     * @throws IOException **********************
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         ParcAtraccio nouParc = new ParcAtraccio("Port Aventura World");
         /**
          * *********Instàncies ENTRADA*********
@@ -42,7 +44,9 @@ public class Principal {
         Visitant p4 = new Visitant("Hector", "Lopez", "19854692V", 649235791, 1.72, 600, e2, 200, 5, 0);
         nouParc.afegirVisitant(p4);
         Visitant p5 = new Visitant("Pere", "Cases", "35496125K", 658423987, 1.45, 700, null, 150, 0, 0);
-        nouParc.afegirVisitant(p3);
+        nouParc.afegirVisitant(p5);
+        Visitant p6 = new Visitant("Sheila", "Ballesteros", "48958756O", 679482478, 1.62, 800, null, 1000, 0, 0);
+        nouParc.afegirVisitant(p6);
 
         /**
          * *********Instàncies EMPLEAT*********
@@ -77,7 +81,7 @@ public class Principal {
      * Test del primer menú. Aquest porta al segon menú un cop es compra una
      * segona entrada.
      */
-    public static void parcTest(ParcAtraccio p) {
+    public static void parcTest(ParcAtraccio p) throws IOException{
         System.out.println("Benvingut a " + p.getNom() + "!");
         Scanner input = new Scanner(System.in);
         String resposta = new String();
@@ -103,7 +107,7 @@ public class Principal {
                         loginEmpleat(p);
                         System.out.println("Vols continuar? Entra 'y' o 'n'.");
                         resposta = input.next();
-                        parcTest(p);
+                        menuEmpleat(p);
                         break;
 
                     case 0:
@@ -139,10 +143,9 @@ public class Principal {
             System.out.println("\n	INFORMACIÓ DEL PARC");
             System.out.println("   ---------------------------");
             System.out.println("Entra '1' si vols informació de les atraccions");
-            System.out.println("Entra '2' si vols informació dels empleats del parc");
-            System.out.println("Entra '3' si vols llista ordenada d'atraccions per nombre de visitants");
-            System.out.println("Entra '4' si vols pujar a una atracció");
-            System.out.println("Entra '5' si vols consultar el nombre de visitants");
+            System.out.println("Entra '2' si vols llista ordenada d'atraccions per nombre de visitants");
+            System.out.println("Entra '3' si vols pujar a una atracció");
+            System.out.println("Entra '4' si vols consultar el nombre de visitants");
             System.out.println("Entra '0' si desitjes sortir del parc");
             try {
                 opcio = input.nextInt();
@@ -157,27 +160,20 @@ public class Principal {
                         break;
 
                     case 2:
-                        //Info referent a les dades dels treballadors
-                        infoTreballadors(p.getEmpleats());
-                        System.out.println("Vols continuar? Entra 'y' o 'n'.");
-                        resposta = input.next();
-                        break;
-
-                    case 3:
                         //Es llisten les atraccions i s'indica el nombre de visitants que te.
                         ordenaAtraccions(p.getAtraccions());
                         System.out.println("Vols continuar? Entra 'y' o 'n'.");
                         resposta = input.next();
                         break;
 
-                    case 4:
+                    case 3:
                         //Acció de pujar a l'atracció on s'indica si es permet o no pujar en aquesta
                         pujarAtraccio(p);
                         System.out.println("Vols continuar? Entra 'y' o 'n'.");
                         resposta = input.next();
                         break;
 
-                    case 5:
+                    case 4:
                         //Consulta el nombre de visitants que hi ha al parc en aquest moment
                         consultarNumVisit(p);
                         System.out.println("Vols continuar? Entra 'y' o 'n'.");
@@ -217,7 +213,7 @@ public class Principal {
         System.out.println("Aquí pots comprar les entrades!\nSi us plau, entra un ID d'entrada:\n");
         for (int i = 0; i < p.getEntrades().size(); i++) { //Es recorren totes les entrades que hi ha disponibles.
             if (!p.getEntrades().get(i).getEstatCompra()) { //Si aquestes no han sigut comprades previament es mostren
-                System.out.println("Id entrada: " + p.getEntrades().get(i).getIdEntrada());
+                System.out.println("Id entrada: " + p.getEntrades().get(i).getIdEntrada() + " - " + p.getEntrades().get(i).getCategoriaEntrada());
             }
         }
         try {
@@ -257,7 +253,7 @@ public class Principal {
     /**
      * Funció que comprova el login dels empleats
      */
-    public static void loginEmpleat(ParcAtraccio p) {
+    public static void loginEmpleat(ParcAtraccio p) throws IOException{
         ArrayList<Empleat> empleats = p.getEmpleats();
         int resposta;
         int opcio;
@@ -278,7 +274,7 @@ public class Principal {
         }
     }
 
-    public static void menuEmpleat(ParcAtraccio p) {
+    public static void menuEmpleat(ParcAtraccio p) throws IOException{
         Scanner input = new Scanner(System.in);
         String resposta = new String();
         int opcio;
@@ -291,6 +287,7 @@ public class Principal {
         System.out.println("Entra '4' si vols crear una entrada");
         System.out.println("Entra '5' si vols consultar els visitants");
         System.out.println("Entra '6' si vols fer fora els visitants amb entrada caducada");
+        System.out.println("Entra '7' si vols informació dels empleats del parc");
         System.out.println("Entra '0' si desitjes sortir del parc");
         try {
             opcio = input.nextInt();
@@ -333,6 +330,13 @@ public class Principal {
                     System.out.println("Vols continuar? Entra 'y' o 'n'.");
                     resposta = input.next();
                     break;
+                    
+                case 7:
+                	//Info referent a les dades dels treballadors
+                    infoTreballadors(p.getEmpleats());
+                    System.out.println("Vols continuar? Entra 'y' o 'n'.");
+                    resposta = input.next();
+                    break;
                 
                 case 0:
                     System.out.println("Gràcies per acudir al parc.");
@@ -340,7 +344,7 @@ public class Principal {
 
                 default:
                     System.out.println("Si us plau, introdueix un número vàlid.");
-                    infoParcTest(p);
+                    menuEmpleat(p);
             }
         }catch (InputMismatchException ex) {
                 System.out.println("Si us plau, introdueix un número.");
@@ -406,7 +410,6 @@ public class Principal {
             System.out.println("Introdueix l'id de l'entrada");
             id = input.nextInt();
             System.out.println("Introdueix la categoria de l'entrada");
-            categoria = input.nextLine();
             categoria = input.nextLine();
             System.out.println("Introdueix el preu");
             preu = input.nextDouble();
@@ -550,11 +553,25 @@ public class Principal {
 
     /**
      * Es recorre l'array l'empleats i es mostra tota la informació d'aquests
+     * @throws IOException 
      */
-    public static void infoTreballadors(ArrayList<Empleat> empleats) {
-        for (int i = 0; i < empleats.size(); i++) {
+    public static void infoTreballadors(ArrayList<Empleat> empleats) throws IOException {
+        /* for (int i = 0; i < empleats.size(); i++) {
             System.out.println(empleats.get(i).toString() + ".");
-        }
+        } */
+    	
+    	String cadena;
+    	File fitxer = new File("empleat.txt");
+    	if(fitxer.exists()) {
+    		FileReader reader = new FileReader(fitxer);
+			BufferedReader b = new BufferedReader (reader);
+			
+			while ((cadena = b.readLine()) != null ) {
+				System.out.println (cadena);
+			}
+			b.close();
+    	}
+    	
     }
 
     /**
@@ -568,9 +585,12 @@ public class Principal {
         String a, e;
         int resposta;
         boolean potPujar = false,nomIncorrecte = false;
-        System.out.println("Identificat amb el nombre de visitant");
+        System.out.println("Identificat amb el ID de visitant");
         resposta = input.nextInt();
-        System.out.println("Introdueix el nom de l'atracció a la que vols pujar");
+        System.out.println("Introdueix el nom de l'atracció a la que vols pujar: ");
+        for (int i = 0; i < p.getAtraccions().size(); i++) {
+        	System.out.println(p.getAtraccions().get(i).getNomAtraccio().toString());
+        }
         a = input.nextLine();
         a = input.nextLine();
         Atraccio atr = null;

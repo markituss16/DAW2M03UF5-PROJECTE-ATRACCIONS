@@ -1,5 +1,6 @@
 package portAventura_atraccions;
 import java.util.*;
+import java.io.*;
 
 public class ParcAtraccio {
 	private ArrayList<Entrada> entrades = new ArrayList<Entrada>();
@@ -85,20 +86,92 @@ public class ParcAtraccio {
 
 	/*MÈTODES PROPIS*/
 	
-	public void afegirEntrada(Entrada e) {
+	public void afegirEntrada(Entrada e) throws IOException{
 		this.entrades.add(e);
+		EscriureEntrades(entrades);
+	}
+	
+	public void EscriureEntrades(ArrayList<Entrada> entrades) throws IOException{
+		File Fentrades = new File("entrades.txt");
+		
+		if(Fentrades.exists()) {
+			FileWriter writer = new FileWriter(Fentrades);
+			PrintWriter pw = new PrintWriter(writer);
+			
+			for(Entrada e : entrades) {
+				pw.println(e.toString());
+			}
+			writer.close();
+		}else {
+			Fentrades.createNewFile();
+		}
+		
 	}
         
-    public void afegirVisitant(Visitant v) {
+    public void afegirVisitant(Visitant v) throws IOException{
 		this.visitants.add(v);
+		EscriureVisitants(visitants);
+	}
+    
+    public void EscriureVisitants(ArrayList<Visitant> visitant) throws IOException{
+		File Fvisitant = new File("visitant.txt");
+		
+		if(Fvisitant.exists()) {
+			FileWriter writer = new FileWriter(Fvisitant);
+			PrintWriter pw = new PrintWriter(writer);
+			
+			for(Visitant e : visitant) {
+				pw.println(e.toString());
+			}
+			writer.close();
+		}else {
+			Fvisitant.createNewFile();
+		}
+		
 	}
         
-    public void afegirEmpleats(Empleat e) {
+    public void afegirEmpleats(Empleat e) throws IOException {
 		this.empleats.add(e);
+		EscriureEmpleats(empleats);
+	}
+    
+    public void EscriureEmpleats(ArrayList<Empleat> empleat) throws IOException{
+		File Fempleat = new File("empleat.txt");
+		
+		if(Fempleat.exists()) {
+			FileWriter writer = new FileWriter(Fempleat);
+			PrintWriter pw = new PrintWriter(writer);
+			
+			for(Empleat e : empleat) {
+				pw.println(e.toString());
+			}
+			writer.close();
+		}else {
+			Fempleat.createNewFile();
+		}
+		
 	}
         
-    public void afegirAtraccio(Atraccio a) {
+    public void afegirAtraccio(Atraccio a) throws IOException{
 		this.atraccions.add(a);
+		EscriureAtraccio(atraccions);
+	}
+    
+    public void EscriureAtraccio(ArrayList<Atraccio> atraccio) throws IOException{
+		File Fatraccio = new File("atraccions.txt");
+		
+		if(Fatraccio.exists()) {
+			FileWriter writer = new FileWriter(Fatraccio);
+			PrintWriter pw = new PrintWriter(writer);
+			
+			for(Atraccio e : atraccio) {
+				pw.println(e.toString());
+			}
+			writer.close();
+		}else {
+			Fatraccio.createNewFile();
+		}
+		
 	}
 	
     /**
