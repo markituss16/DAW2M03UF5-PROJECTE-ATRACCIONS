@@ -2,11 +2,11 @@ package portAventura_atraccions;
 import java.util.*;
 import java.io.*;
 
-public class ParcAtraccio {
-	private ArrayList<Entrada> entrades = new ArrayList<Entrada>();
+public class ParcAtraccio{
+	private LinkedList<Entrada> entrades = new LinkedList<Entrada>();
     private ArrayList<Visitant> visitants = new ArrayList<Visitant>();
     private ArrayList<Empleat> empleats = new ArrayList<Empleat>();
-    private ArrayList<Atraccio> atraccions = new ArrayList<Atraccio>();
+    private HashMap<Integer,Atraccio> atraccions = new HashMap<Integer,Atraccio>();
 	private String nom = new String();
 	private int horariObertura;
 	private int numVisitants;
@@ -18,11 +18,11 @@ public class ParcAtraccio {
 
 	/*GETTERS I SETTERS*/
 
-    public ArrayList<Entrada> getEntrades() {
+    public LinkedList<Entrada> getEntrades() {
         return entrades;
     }
 
-    public void setEntrades(ArrayList<Entrada> entrades) {
+    public void setEntrades(LinkedList<Entrada> entrades) {
         this.entrades = entrades;
     }
 
@@ -50,11 +50,11 @@ public class ParcAtraccio {
         this.nom = nom;
     }
 
-    public ArrayList<Atraccio> getAtraccions() {
+    public HashMap<Integer,Atraccio> getAtraccions() {
         return atraccions;
     }
 
-    public void setAtraccions(ArrayList<Atraccio> atraccions) {
+    public void setAtraccions(HashMap<Integer,Atraccio> atraccions) {
         this.atraccions = atraccions;
     }
 
@@ -91,7 +91,7 @@ public class ParcAtraccio {
 		EscriureEntrades(entrades);
 	}
 	
-	public void EscriureEntrades(ArrayList<Entrada> entrades) throws IOException{
+	public void EscriureEntrades(LinkedList<Entrada> entrades) throws IOException{
 		File Fentrades = new File("entrades.txt");
 		
 		if(Fentrades.exists()) {
@@ -108,9 +108,14 @@ public class ParcAtraccio {
 		
 	}
         
-    public void afegirVisitant(Visitant v) throws IOException{
+    public void afegirVisitant(Visitant v){
 		this.visitants.add(v);
-		EscriureVisitants(visitants);
+		try {
+			EscriureVisitants(visitants);
+		}
+		catch(Exception err){
+			System.out.println(err);
+		};
 	}
     
     public void EscriureVisitants(ArrayList<Visitant> visitant) throws IOException{
@@ -153,24 +158,27 @@ public class ParcAtraccio {
 	}
         
     public void afegirAtraccio(Atraccio a) throws IOException{
-		this.atraccions.add(a);
-		EscriureAtraccio(atraccions);
+    	
+    	int g = atraccions.size()+1;
+    	this.atraccions.put(g,a);
+		EscriureAtraccio();
 	}
     
-    public void EscriureAtraccio(ArrayList<Atraccio> atraccio) throws IOException{
+    public void EscriureAtraccio() throws IOException{
 		File Fatraccio = new File("atraccions.txt");
 		
 		if(Fatraccio.exists()) {
 			FileWriter writer = new FileWriter(Fatraccio);
 			PrintWriter pw = new PrintWriter(writer);
 			
-			for(Atraccio e : atraccio) {
-				pw.println(e.toString());
+			for(int i = 1; i<atraccions.size()+1;i++) {
+				pw.println(atraccions.get(i).toString());
 			}
 			writer.close();
 		}else {
 			Fatraccio.createNewFile();
 		}
+		
 		
 	}
 	

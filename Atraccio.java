@@ -1,26 +1,18 @@
 package portAventura_atraccions;
 
 public class Atraccio implements Comparable<Atraccio> {
-	private int idAtraccio;
+	//private int idAtraccio;
 	private ENomAtraccio nomAtraccio;
 	private ESeguretatAtraccio seguretatAtraccio;
 	private int quantitatGent;
 	private double alturaMin;
 	
-	public Atraccio(int idAtraccio, ENomAtraccio nomAtraccio,int quantitatGent, double alturaMin) {
-		this.idAtraccio = idAtraccio;
+	public Atraccio(ENomAtraccio nomAtraccio,int quantitatGent, double alturaMin) {
+		//this.idAtraccio = idAtraccio;
 		this.nomAtraccio = nomAtraccio;
 		this.quantitatGent = quantitatGent;
 		this.alturaMin = alturaMin;
                 atraccioSeguretat();
-	}
-
-	public int getIdAtraccio() {
-		return idAtraccio;
-	}
-
-	public void setIdAtraccio(int idAtraccio) {
-		this.idAtraccio = idAtraccio;
 	}
 
 	public ENomAtraccio getNomAtraccio() {
@@ -57,7 +49,7 @@ public class Atraccio implements Comparable<Atraccio> {
 
 	@Override
 	public String toString() {
-		return "Atraccio [idAtraccio=" + idAtraccio + ", nomAtraccio=" + nomAtraccio + ", seguretatAtraccio="
+		return "Atraccio [nomAtraccio=" + nomAtraccio + ", seguretatAtraccio="
 				+ seguretatAtraccio + ", quantitatGent=" + quantitatGent + "]";
 	}
 
