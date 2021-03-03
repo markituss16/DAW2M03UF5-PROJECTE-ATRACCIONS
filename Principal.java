@@ -1,22 +1,37 @@
 package portAventura_atraccions;
 
-import java.io.*;
+import java.util.ArrayList;
 import java.util.*;
+import java.io.*;
+import java.util.Collections;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
 
 public class Principal {
 
     /**
-     * ***************MAIN
-     * @throws IOException **********************
+     * ***************MAIN**********************
      */
     public static void main(String[] args) throws IOException {
         ParcAtraccio nouParc = new ParcAtraccio("Port Aventura World");
         /**
-         * *********Inst�ncies ENTRADA*********
+         * *********Instï¿½ncies ENTRADA*********
          */
 
-        //�s de polimorfisme
+        //ï¿½s de polimorfisme
         Entrada e1 = new Estandar(1000, "adult", 52.10, false);
         nouParc.afegirEntrada(e1);
         Entrada e2 = new Estandar(1022, "junior/senior", 55.00, true);
@@ -31,13 +46,11 @@ public class Principal {
         nouParc.afegirEntrada(e6);
 
         /**
-         * *********Inst�ncies VISITANT*********
+         * *********Instï¿½ncies VISITANT*********
          */
-        
-        
         Visitant p1 = new Visitant("Pau", "Sanchez", "33245624X", 643068219, 1.50, 200, null, 1200, 0, 0);
         nouParc.afegirVisitant(p1);
-        Visitant p2 = new Visitant("Manel", "Martin", "48926587O", 694851678, 1.69, 400, null, 60, 0, 0);
+        Visitant p2 = new Visitant("Manel", "Martin", "48926587O", 694851678, 1.69, 400, null, 2, 0, 0);
         nouParc.afegirVisitant(p2);
         Visitant p3 = new Visitant("Jordi", "Mart�nez", "58712682L", 623489502, 1.80, 500, null, 120, 0, 0);
         nouParc.afegirVisitant(p3);
@@ -45,11 +58,9 @@ public class Principal {
         nouParc.afegirVisitant(p4);
         Visitant p5 = new Visitant("Pere", "Cases", "35496125K", 658423987, 1.45, 700, null, 150, 0, 0);
         nouParc.afegirVisitant(p5);
-        Visitant p6 = new Visitant("Sheila", "Ballesteros", "48958756O", 679482478, 1.62, 800, null, 1000, 0, 0);
-        nouParc.afegirVisitant(p6);
-
+        
         /**
-         * *********Inst�ncies EMPLEAT*********
+         * *********Instï¿½ncies EMPLEAT*********
          */
         Empleat p7 = new Empleat("Laia", "P�rez", "33245624X", 643068219, 3, ESalariEmpleat.SUPERIOR);
         nouParc.afegirEmpleats(p7);
@@ -59,35 +70,191 @@ public class Principal {
         nouParc.afegirEmpleats(p9);
 
         /**
-         * *********Inst�ncies ATRACCIO*********
+         * *********Instï¿½ncies ATRACCIO*********
          */
-        Atraccio a1 = new Atraccio(ENomAtraccio.DRAGON_KHAN, 10, 1.51);
+        Atraccio a1 = new Atraccio(1, ENomAtraccio.DRAGON_KHAN, 10, 1.51);
         nouParc.afegirAtraccio(a1);
-        Atraccio a2 = new Atraccio(ENomAtraccio.TUTUKI_SPLASH, 15, 1.40);
+        Atraccio a2 = new Atraccio(2, ENomAtraccio.TUTUKI_SPLASH, 15, 1.40);
         nouParc.afegirAtraccio(a2);
-        Atraccio a3 = new Atraccio(ENomAtraccio.SHAMBHALA, 20, 1.50);
+        Atraccio a3 = new Atraccio(3, ENomAtraccio.SHAMBHALA, 20, 1.50);
         nouParc.afegirAtraccio(a3);
-        Atraccio a4 = new Atraccio(ENomAtraccio.HURAKAN_CONDOR, 16, 1.55);
+        Atraccio a4 = new Atraccio(4, ENomAtraccio.HURAKAN_CONDOR, 16, 1.55);
         nouParc.afegirAtraccio(a4);
-        Atraccio a5 = new Atraccio(ENomAtraccio.STAMPIDA, 24, 1.45);
+        Atraccio a5 = new Atraccio(5, ENomAtraccio.STAMPIDA, 24, 1.45);
         nouParc.afegirAtraccio(a5);
 
-        //Execuci� de les funcions
+        //Execuciï¿½ de les funcions
         parcTest(nouParc);
         infoParcTest(nouParc);
     }
+    
+    public static void afegirInfoEntrades(LinkedList<Entrada> entrades) {
+    	try {
+    		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        	DocumentBuilder db = dbf.newDocumentBuilder();
+        	Document doc = db.newDocument();
+        	//Es defineix l'element arrel del document
+        	Element eArrel = doc.createElement("entrades");
+        	doc.appendChild(eArrel);
+        	
+        	//Es recorre l'arraylist
+        	Iterator<Entrada> i = entrades.iterator();
+        	while(i.hasNext()) {
+        		Entrada e = i.next();
+        		
+        		//Es defineix el node que contindra l'element visitant
+        		Element eEntrada = doc.createElement("entrada");
+        		eArrel.appendChild(eEntrada);
+        		
+        		Element eId = doc.createElement("idEntrada");
+        		eId.appendChild(doc.createTextNode(Integer.toString(e.getIdEntrada())));
+        		eEntrada.appendChild(eId);       			       			
+            		
+            	Element eCategoria = doc.createElement("categoria");
+            	eCategoria.appendChild(doc.createTextNode(e.getCategoriaEntrada()));
+            	eEntrada.appendChild(eCategoria);
+            		
+            	Element ePreu = doc.createElement("preu");
+            	ePreu.appendChild(doc.createTextNode(Double.toString(e.getPreu())));
+        		eEntrada.appendChild(ePreu);
+        		
+        		Element eEstat = doc.createElement("estat");
+        		eEstat.appendChild(doc.createTextNode(Boolean.toString(e.getEstatCompra())));
+        		eEntrada.appendChild(eEstat);      		
+        	}    		
+        		
+        	TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        	Transformer transformer = transformerFactory.newTransformer();
+        	DOMSource source = new DOMSource(doc);
+        	StreamResult result = new StreamResult(new File("infoEntrades.xml"));
+        	transformer.transform(source,result);
+        	
+        } catch(Exception e) {
+        	e.printStackTrace();
+        }
+    }
 
+    public static void afegirInfoVisitants(ArrayList<Visitant> visitants) {
+    	try {
+        	DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        	DocumentBuilder db = dbf.newDocumentBuilder();
+        	Document doc = db.newDocument();
+        	//Es defineix l'element arrel del document
+        	Element eArrel = doc.createElement("visitants");
+        	doc.appendChild(eArrel);
+        	
+        	//Es recorre l'arraylist
+        	Iterator<Visitant> i = visitants.iterator();
+        	while(i.hasNext()) {
+        		Visitant v = i.next();
+        		
+        		//Es defineix el node que contindra l'element visitant
+        		Element eVisitant = doc.createElement("visitant");
+        		eArrel.appendChild(eVisitant);
+        		
+        		Attr attr = doc.createAttribute("numVisitant");
+        		attr.setValue(Integer.toString(v.getNumVisitant()));
+        		eVisitant.setAttributeNode(attr);
+        		
+        		Element eEntrada;
+        		
+        		if(v.getEntrada() == null) {
+        			eEntrada = doc.createElement("entrada");
+        			eEntrada.appendChild(doc.createTextNode(null));
+        		} else {
+        			//Es defineix l'element de l'etrada
+            		eEntrada = doc.createElement("entrada");
+            		Attr attr2 = doc.createAttribute("id");
+            		attr2.setValue(Integer.toString(v.getEntrada().getIdEntrada()));
+            		eEntrada.setAttributeNode(attr2);
+            		
+            		Element eCategoria = doc.createElement("categoria");
+            		eCategoria.appendChild(doc.createTextNode(v.getEntrada().getCategoriaEntrada()));
+            		eEntrada.appendChild(eCategoria);
+            		
+            		Element ePreu = doc.createElement("preu");
+            		ePreu.appendChild(doc.createTextNode(Double.toString(v.getEntrada().getPreu())));
+            		eEntrada.appendChild(ePreu);
+            		
+            		Element eEstat = doc.createElement("estat");
+            		eEstat.appendChild(doc.createTextNode(Boolean.toString(v.getEntrada().getEstatCompra())));
+            		eEntrada.appendChild(eEstat);
+        		}
+        		    		
+        		eVisitant.appendChild(eEntrada);
+        		
+        		//Es defineix l'element diners
+        		Element eDiners = doc.createElement("diners");
+        		eDiners.appendChild(doc.createTextNode(Double.toString(v.getDiners())));
+        		eVisitant.appendChild(eDiners);
+        		
+        		//Es defineix l'element pujades
+        		Element ePujades = doc.createElement("pujades");
+        		ePujades.appendChild(doc.createTextNode(Integer.toString(v.getPujades())));
+        		eVisitant.appendChild(ePujades);
+        		
+        		//Es defineix l'element primera fila
+        		Element ePrimeraFila = doc.createElement("primeraFila");
+        		ePrimeraFila.appendChild(doc.createTextNode(Integer.toString(v.getPrimeraFila())));
+        		eVisitant.appendChild(ePrimeraFila);
+        		
+        		//Es defineix l'element altura
+        		Element eAltura = doc.createElement("altura");
+        		eAltura.appendChild(doc.createTextNode(Double.toString(v.getAltura())));
+        		eVisitant.appendChild(eAltura);
+        	}
+        	TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        	Transformer transformer = transformerFactory.newTransformer();
+        	DOMSource source = new DOMSource(doc);
+        	StreamResult result = new StreamResult(new File("infoVisitants.xml"));
+        	transformer.transform(source,result);
+        	
+        } catch(Exception e) {
+        	e.printStackTrace();
+        }
+    }
+    
+    public static void mostrarInfoVisitants(ArrayList<Visitant> visitants) {
+    	File file = new File("infoVisitants.xml");
+    	NodeList nList = null;
+    	try {
+    		DocumentBuilderFactory dbFactory= DocumentBuilderFactory.newInstance();
+    		DocumentBuilder dBuilder= dbFactory.newDocumentBuilder();
+    		Document doc= dBuilder.parse(file);
+    		
+    		doc.getDocumentElement().normalize();
+    		nList = doc.getElementsByTagName("visitant");
+    		
+    		System.out.println("Nombre de visitants: " + nList.getLength());
+    		
+    	} catch(Exception e) {
+    		e.printStackTrace();
+    	}
+    	
+    	for(int i=0; i < nList.getLength(); i++) {
+    		Node nNode = nList.item(i);
+    		if(nNode.getNodeType() == Node.ELEMENT_NODE) {
+    			Element eElement = (Element) nNode;
+    			System.out.println("\nIdentificador del visitant: " + eElement.getAttribute("numVisitant"));
+    			System.out.println("Diners del visitant " + eElement.getElementsByTagName("diners").item(0).getTextContent());
+	    		System.out.println("Vegades que ha pujat el visitant: " + eElement.getElementsByTagName("pujades").item(0).getTextContent());
+	    		System.out.println("Cops que el visitant ha pujat a primera fila: " + eElement.getElementsByTagName("primeraFila").item(0).getTextContent());
+	    		System.out.println("Altura del visitant: " + eElement.getElementsByTagName("altura").item(0).getTextContent());
+	    	}
+    	}
+    }
+    
     /**
-     * Test del primer men�. Aquest porta al segon men� un cop es compra una
+     * Test del primer menï¿½. Aquest porta al segon menï¿½ un cop es compra una
      * segona entrada.
      */
-    public static void parcTest(ParcAtraccio p) throws IOException{
+    public static void parcTest(ParcAtraccio p) throws IOException {
         System.out.println("Benvingut a " + p.getNom() + "!");
         Scanner input = new Scanner(System.in);
         String resposta = new String();
         int opcio;
 
-        //Opcions del primer men�
+        //Opcions del primer menï¿½
         do {
             System.out.println("Entra '1' per a comprar una entrada i poder accedir al parc.");
             System.out.println("Entra '2' si ets un empleat del parc.");
@@ -107,7 +274,7 @@ public class Principal {
                         loginEmpleat(p);
                         System.out.println("Vols continuar? Entra 'y' o 'n'.");
                         resposta = input.next();
-                        menuEmpleat(p);
+                        parcTest(p);
                         break;
 
                     case 0:
@@ -131,26 +298,29 @@ public class Principal {
     }
 
     /**
-     * *************************TESTER_INFORMACIO*********************************
+     * *************************TESTER_INFORMACIO
+     * @throws IOException *********************************
      */
-    public static void infoParcTest(ParcAtraccio p) {
+    public static void infoParcTest(ParcAtraccio p) throws IOException {
         Scanner input = new Scanner(System.in);
         String resposta = new String();
         int opcio;
 
-        //Opcions del segon men�
+        //Opcions del segon menï¿½
         do {
             System.out.println("\n	INFORMACI� DEL PARC");
             System.out.println("   ---------------------------");
             System.out.println("Entra '1' si vols informaci� de les atraccions");
-            System.out.println("Entra '2' si vols llista d'atraccions del parc");
+            System.out.println("Entra '2' si vols informaci� dels empleats del parc");
             System.out.println("Entra '3' si vols pujar a una atracci�");
             System.out.println("Entra '4' si vols consultar el nombre de visitants");
+            System.out.println("Entra '5' si vols afegir una atracci� a preferits");
+            System.out.println("Entra '6' si vols mostrar la teva llista de preferits");
             System.out.println("Entra '0' si desitjes sortir del parc");
             try {
                 opcio = input.nextInt();
                 switch (opcio) {
-                    //Execuci� de totes en cada cas seleccionat
+                    //Execuciï¿½ de totes en cada cas seleccionat
 
                     case 1:
                         //Info seguretat atraccions
@@ -160,14 +330,21 @@ public class Principal {
                         break;
 
                     case 2:
-                        //Es llisten les atraccions i s'indica el nombre de visitants que te.
-                        ordenaAtraccions(p.getAtraccions());
+                        //Info referent a les dades dels treballadors
+                        infoTreballadors(p.getEmpleats());
                         System.out.println("Vols continuar? Entra 'y' o 'n'.");
                         resposta = input.next();
                         break;
 
+                    /*case 3:
+                        //Es llisten les atraccions i s'indica el nombre de visitants que te.
+                        //ordenaAtraccions(p.getAtraccions());
+                        System.out.println("Vols continuar? Entra 'y' o 'n'.");
+                        resposta = input.next();
+                        break;*/
+
                     case 3:
-                        //Acci� de pujar a l'atracci� on s'indica si es permet o no pujar en aquesta
+                        //Acciï¿½ de pujar a l'atracciï¿½ on s'indica si es permet o no pujar en aquesta
                         pujarAtraccio(p);
                         System.out.println("Vols continuar? Entra 'y' o 'n'.");
                         resposta = input.next();
@@ -176,6 +353,20 @@ public class Principal {
                     case 4:
                         //Consulta el nombre de visitants que hi ha al parc en aquest moment
                         consultarNumVisit(p);
+                        System.out.println("Vols continuar? Entra 'y' o 'n'.");
+                        resposta = input.next();
+                        break;
+                    
+                    case 5:
+                        //Afegeix atracciÃ³ a llista preferits
+                        afegirPreferits(p);
+                        System.out.println("Vols continuar? Entra 'y' o 'n'.");
+                        resposta = input.next();
+                        break;
+
+                    case 6:
+                        //Llista les atraccions preferides dels visitants
+                        llistarPreferits(p);
                         System.out.println("Vols continuar? Entra 'y' o 'n'.");
                         resposta = input.next();
                         break;
@@ -198,9 +389,59 @@ public class Principal {
     }
 
     /**
-     * Funci� per a fer l'operaci� de compra d'entrades. Comen�a mostrant les
+     * MÃ¨tode que permet afegir una atracciÃ³ a la llista de preferits d'un visitant.
+     */
+    public static void afegirPreferits(ParcAtraccio p){
+        Scanner input = new Scanner(System.in);
+        Visitant v = null;
+        System.out.println("Identificat amb el nombre de visitant");
+        int numVisit = input.nextInt();
+        Atraccio atr = null;;
+        System.out.println("Introdueix el nom de l'atracci� que vols afegir a preferits");
+        String a = input.nextLine();
+        a = input.nextLine();
+        for (int i = 0; i < p.getVisitants().size(); i++) {
+            if (p.getVisitants().get(i).getNumVisitant() == numVisit) { //Si el numero id del visitant concorda, s'assigna.
+                v = p.getVisitants().get(i);
+            }
+        }
+        //En aquest primer for es comprova que l'atracciï¿½ introduï¿½da ï¿½s correcte.
+        for (int i = 1; i < p.getAtraccions().size()+1; i++) {
+            if (p.getAtraccions().get(i).getNomAtraccio().toString().equals(a)) {
+                atr = p.getAtraccions().get(i);
+            }
+        }
+
+        v.afegeixPreferit(atr);
+        System.out.println("Atracci� afegida correctament.");
+    }
+
+    /**
+     * MÃ¨tode que permet llistar les atraccions preferides de cada visitant.
+     */
+    public static void llistarPreferits(ParcAtraccio p) {
+        Scanner input = new Scanner(System.in);
+        Visitant v = null;
+        System.out.println("Identificat amb el nombre de visitant");
+        int numVisit = input.nextInt();
+        for (int i = 0; i < p.getVisitants().size(); i++) {
+            if (p.getVisitants().get(i).getNumVisitant() == numVisit) { //Si el numero id del visitant concorda, s'assigna.
+                v = p.getVisitants().get(i);
+            }
+        }
+        
+        System.out.println("Aquesta �s la llista de les teves atraccions preferides!");
+        Iterator<Atraccio> i = v.getPreferits().iterator();
+    	while(i.hasNext()) {
+    		Atraccio a = i.next();
+            System.out.println(a);
+        }
+    }
+
+    /**
+     * Funciï¿½ per a fer l'operaciï¿½ de compra d'entrades. Comenï¿½a mostrant les
      * entrades disponibles al parc, on s'ha d'escollir una d'aquestes. Un cop
-     * s'introdueix el n�mero identificador de visitant, es mostra la info del
+     * s'introdueix el nï¿½mero identificador de visitant, es mostra la info del
      * proces de compra
      */
     public static void transaccioEntrades(ParcAtraccio p) {
@@ -213,21 +454,31 @@ public class Principal {
         System.out.println("Aqu� pots comprar les entrades!\nSi us plau, entra un ID d'entrada:\n");
         for (int i = 0; i < p.getEntrades().size(); i++) { //Es recorren totes les entrades que hi ha disponibles.
             if (!p.getEntrades().get(i).getEstatCompra()) { //Si aquestes no han sigut comprades previament es mostren
-                System.out.println("Id entrada: " + p.getEntrades().get(i).getIdEntrada() + " - " + p.getEntrades().get(i).getCategoriaEntrada());
+                System.out.println("Id entrada: " + p.getEntrades().get(i).getIdEntrada());
             }
         }
         try {
             eleccio = input.nextInt();
+            
             System.out.println("Identificat amb el nombre de visitant");
             numVisit = input.nextInt();
-            
-            Iterator<Visitant> vis = p.getVisitants().iterator();
-            if(vis.hasNext()) {
-            	Visitant i = vis.next();
-            	if (i.getNumVisitant() == numVisit) { //Si el numero id del visitant concorda, s'assigna.
-                    v = i;
+            for (int i = 0; i < p.getVisitants().size(); i++) {
+                if (p.getVisitants().get(i).getNumVisitant() == numVisit) { //Si el numero id del visitant concorda, s'assigna.
+                    v = p.getVisitants().get(i);
+                    System.out.println(v.toString());
                 }
             }
+           
+            
+            Entrada e = null;
+            for (int i = 0; i < p.getEntrades().size(); i++) {
+                if (p.getEntrades().get(i).getIdEntrada() == eleccio) {
+                	e = p.getEntrades().get(i);
+                }
+            }
+            
+            ComprovarDiners<Visitant,Entrada> cd = new ComprovarDiners<Visitant,Entrada>(v,e);
+            cd.dinersComprovats();
             
             //En el for d'abaix es mostra tota la info de la compra un cop aquesta s'ha pogut realitzar
             for (int i = 0; i < p.getEntrades().size(); i++) {
@@ -237,7 +488,7 @@ public class Principal {
                     v.setEntrada(p.getEntrades().get(i));
                     System.out.println("Et queden " + v.getDiners() + " �.");
                     System.out.println("Ja tens la teva entrada!");
-                    eCopia = p.getEntrades().get(i).clone();   //Es fa �s del clone per tal de tenir una copia de l'entrada que s'ha comprat.
+                    eCopia = p.getEntrades().get(i).clone();   //Es fa ï¿½s del clone per tal de tenir una copia de l'entrada que s'ha comprat.
                     System.out.println("Ens quedem una copia de l'entrada, que gaudeixis!");
                     existeix = true;
                 } else {
@@ -255,9 +506,9 @@ public class Principal {
     }
 
     /**
-     * Funci� que comprova el login dels empleats
+     * Funciï¿½ que comprova el login dels empleats
      */
-    public static void loginEmpleat(ParcAtraccio p) throws IOException{
+    public static void loginEmpleat(ParcAtraccio p) throws IOException {
         ArrayList<Empleat> empleats = p.getEmpleats();
         int resposta;
         int opcio;
@@ -291,12 +542,15 @@ public class Principal {
         System.out.println("Entra '4' si vols crear una entrada");
         System.out.println("Entra '5' si vols consultar els visitants");
         System.out.println("Entra '6' si vols fer fora els visitants amb entrada caducada");
-        System.out.println("Entra '7' si vols informaci� dels empleats del parc");
+        System.out.println("Entra '7' per exportar informe de visitants");
+        System.out.println("Entra '8' per exportar informe d'entrades");
+        System.out.println("Entra '9' per afegir una atracci� a la ruta de vigil�ncia");
+        System.out.println("Entra '10' per consultar les atraccions de la ruta de vigil�ncia.");
         System.out.println("Entra '0' si desitjes sortir del parc");
         try {
             opcio = input.nextInt();
             switch (opcio) {
-                //Execuci� de totes en cada cas seleccionat
+                //Execuciï¿½ de totes en cada cas seleccionat
 
                 case 1:                   
                     consultarEntrades(p.getEntrades());
@@ -310,7 +564,7 @@ public class Principal {
                     resposta = input.next();
                     break;
 
-                case 3:                   
+                case 3: 
                     eliminarEntrada(p, p.getEntrades());
                     System.out.println("Vols continuar? Entra 'y' o 'n'.");
                     resposta = input.next();
@@ -323,32 +577,49 @@ public class Principal {
                     break;
 
                 case 5:                   
-                    consultarVisitant(p.getVisitants());
-                    System.out.println("Vols continuar? Entra 'y' o 'n'.");
+                	mostrarInfoVisitants(p.getVisitants());
+                    System.out.println("\nVols continuar? Entra 'y' o 'n'.");
                     resposta = input.next();
                     break;
 
                 case 6:
-                	//Es fa fora aquell visitant que supera la condici� de nombre maxim de pujades
+                	//Es fa fora aquell visitant que supera la condiciï¿½ de nombre maxim de pujades
                     ferForaVisitant(p, p.getVisitants());
                     System.out.println("Vols continuar? Entra 'y' o 'n'.");
                     resposta = input.next();
                     break;
                     
                 case 7:
-                	//Info referent a les dades dels treballadors
-                    infoTreballadors(p.getEmpleats());
-                    System.out.println("Vols continuar? Entra 'y' o 'n'.");
+                	afegirInfoVisitants(p.getVisitants());
+                	System.out.println("Vols continuar? Entra 'y' o 'n'.");
+                    resposta = input.next();
+                    break;
+                    
+                case 8:
+                	afegirInfoEntrades(p.getEntrades());
+                	System.out.println("Vols continuar? Entra 'y' o 'n'.");
+                    resposta = input.next();
+                    break;
+
+                case 9:
+                	afegirVigilancia(p);
+                	System.out.println("Vols continuar? Entra 'y' o 'n'.");
                     resposta = input.next();
                     break;
                 
+                case 10:
+                	llistarVigilancia(p);
+                	System.out.println("Vols continuar? Entra 'y' o 'n'.");
+                    resposta = input.next();
+                    break;
+                    
                 case 0:
                     System.out.println("Gr�cies per acudir al parc.");
                     System.exit(0);
 
                 default:
                     System.out.println("Si us plau, introdueix un n�mero v�lid.");
-                    menuEmpleat(p);
+                    infoParcTest(p);
             }
         }catch (InputMismatchException ex) {
                 System.out.println("Si us plau, introdueix un n�mero.");
@@ -357,8 +628,58 @@ public class Principal {
         }while(resposta.equalsIgnoreCase("y"));
         }
     
+     /**
+     * MÃ¨tode que permet afegir una atracciÃ³ a la llista de preferits d'un visitant.
+     */
+    public static void afegirVigilancia(ParcAtraccio p){
+        Scanner input = new Scanner(System.in);
+        Empleat e = null;
+        System.out.println("Identificat amb el nombre d'empleat");
+        int numEmple = input.nextInt();
+        Atraccio atr = null;;
+        System.out.println("Introdueix el nom de l'atracci� que vols afegir a la ruta de vigilancia");
+        String a = input.nextLine();
+        a = input.nextLine();
+        for (int i = 0; i < p.getEmpleats().size(); i++) {
+            if (p.getEmpleats().get(i).getIdEmpleat() == numEmple) { //Si el numero id del visitant concorda, s'assigna.
+                e = p.getEmpleats().get(i);
+            }
+        }
+        //En aquest primer for es comprova que l'atracciï¿½ introduï¿½da ï¿½s correcte.
+        for (int i = 1; i < p.getAtraccions().size()+1; i++) {
+            if (p.getAtraccions().get(i).getNomAtraccio().toString().equals(a)) {
+                atr = p.getAtraccions().get(i);
+            }
+        }
+
+        e.afegeixVigilancia(atr);
+        System.out.println("Atracci� afegida a la ruta de vigil�ncia correctament.");
+    }
+
     /**
-     * Funci� on es consulten les entrades.
+     * MÃ¨tode que permet llistar les atraccions preferides de cada visitant.
+     */
+    public static void llistarVigilancia(ParcAtraccio p) {
+        Scanner input = new Scanner(System.in);
+        Empleat e = null;
+        System.out.println("Identificat amb el nombre d'empleat'");
+        int numEmp = input.nextInt();
+        for (int i = 0; i < p.getEmpleats().size(); i++) {
+            if (p.getEmpleats().get(i).getIdEmpleat() == numEmp) { //Si el numero id del visitant concorda, s'assigna.
+                e = p.getEmpleats().get(i);
+            }
+        }
+        
+        System.out.println("Aquestes son les atraccions de la ruta de vigil�ncia");
+        Iterator<Atraccio> i = e.getVigilancia().iterator();
+    	while(i.hasNext()) {
+    		Atraccio a = i.next();
+            System.out.println(a);
+        }
+    }
+
+    /**
+     * Funciï¿½ on es consulten les entrades.
      * Es llegeixen totes les entrades creades i es mostra la seva info.
      */ 
     public static void consultarEntrades(LinkedList<Entrada> entrades){
@@ -369,8 +690,8 @@ public class Principal {
     }
     
     /**
-     * Funci� que modifica les dades d'una entrada.
-     * En aquest cas el que es fa �s, un cop s'ha afegit la info que es vol modificar,
+     * Funciï¿½ que modifica les dades d'una entrada.
+     * En aquest cas el que es fa ï¿½s, un cop s'ha afegit la info que es vol modificar,
      * s'elimina l'entrada anterior i es crea una nova amb la info actualitzada.
      */
     public static void modificarEntrada(ParcAtraccio p, LinkedList<Entrada> entrades){
@@ -403,7 +724,7 @@ public class Principal {
     }
     
     /**
-     * Aquesta funci� est� relacionada amb la de dalt, ja que permet introdu�r les dades en funci� d'un tipus o un altre
+     * Aquesta funciï¿½ estï¿½ relacionada amb la de dalt, ja que permet introduï¿½r les dades en funciï¿½ d'un tipus o un altre
      */
     public static Entrada modificarDadesEntrada(Entrada e){
         Scanner input = new Scanner(System.in);
@@ -414,6 +735,7 @@ public class Principal {
             System.out.println("Introdueix l'id de l'entrada");
             id = input.nextInt();
             System.out.println("Introdueix la categoria de l'entrada");
+            categoria = input.nextLine();
             categoria = input.nextLine();
             System.out.println("Introdueix el preu");
             preu = input.nextDouble();
@@ -436,7 +758,7 @@ public class Principal {
     }
     
     /**
-     * Funci� que elimina qualsevol entrada que s'ha creat previament.
+     * Funciï¿½ que elimina qualsevol entrada que s'ha creat previament.
      * 
      */
     public static void eliminarEntrada(ParcAtraccio p,LinkedList<Entrada> entrades){
@@ -460,8 +782,8 @@ public class Principal {
     }
     
     /**
-     * Funci� que s'encarrega de crear una nova entrada
-     * Es dona l'opci� de crear una entrada d'un dels dos tipus que hi ha.
+     * Funciï¿½ que s'encarrega de crear una nova entrada
+     * Es dona l'opciï¿½ de crear una entrada d'un dels dos tipus que hi ha.
      */
     public static void crearEntrada(ParcAtraccio p, LinkedList<Entrada> entrades){
         Scanner input = new Scanner(System.in);
@@ -501,77 +823,62 @@ public class Principal {
     }
     
     /**
-     * Funci� que fa fora un visitant un cop aquest ha superat el maxim de pujades.
+     * Funciï¿½ que fa fora un visitant un cop aquest ha superat el maxim de pujades.
      * Quan el fa fora, resta el visitant.
      */
     public static void ferForaVisitant(ParcAtraccio p, ArrayList<Visitant> visitants){
         Estandar e = null;
         System.out.println("Cerquem els visitants amb entrada caducada");
         int n = visitants.size();
-        
-        Iterator<Visitant> vis = p.getVisitants().iterator();
-        Visitant i = vis.next();
-        if(vis.hasNext()) {
-        	if(i.getEntrada() instanceof Estandar){
-                e = (Estandar)i.getEntrada();
-                if(e.getLimitAtraccions()==i.getPujades()){
-                    System.out.println("S'ha fet fora" + i.toString());
-                    visitants.remove(vis);
+        for(int i = 0; i<n;i++){
+            if(visitants.get(i).getEntrada() instanceof Estandar){
+                e = (Estandar)visitants.get(i).getEntrada();
+                if(e.getLimitAtraccions()==visitants.get(i).getPujades()){
+                    System.out.println("S'ha fet fora" + visitants.get(i).toString());
+                    visitants.remove(i);
                     n = visitants.size();
-                }else {
-                	i = vis.next();
+                    i-=1;
                 }
             }
-        }
-              
+        }        
         p.setVisitants(visitants);
     }
     
     /**
-     * Funci� que consulta els visitans que es troben al parc, mostrant la seva informaci�
+     * Funciï¿½ que consulta els visitans que es troben al parc, mostrant la seva informaciï¿½
      */   
     public static void consultarVisitant(ArrayList<Visitant> visitants){
         System.out.println("Llista de visitants: ");
-        Iterator<Visitant> vis = visitants.iterator();
-        Visitant i = vis.next();
-        if(vis.hasNext()) {
-        	System.out.println(i.toString());
+        for(int i=0; i<visitants.size(); i++){
+            System.out.println(visitants.get(i).toString());
         }
-        
     }
         /**
-         * Funci� que llista les atraccions (sense criteri alfabetic). Recorre
+         * Funciï¿½ que llista les atraccions (sense criteri alfabetic). Recorre
          * les atraccions que hi ha i les mostra amb la quantitat de gent que
          * contenen.
-         */
+         
     public static void ordenaAtraccions(HashMap<Integer,Atraccio> atraccions) {
-        //Fa us del CompareTo que s'ha creat a la classe Atracicons per a fer l'ordenaci�
+        //Fa us del CompareTo que s'ha creat a la classe Atracicons per a fer l'ordenaciï¿½
         //Collections.sort(atraccions);
-        for (int i = 1; i < atraccions.size()+1; i++) {
-            System.out.println("L'atracci� " + atraccions.get(i).getNomAtraccio() + ", t� " + atraccions.get(i).getQuantitatGent() + " visitants.");
-        }
-    }
+    	atraccions.forEach((k,v) -> System.out.println("L'atracciï¿½ " + v.getNomAtraccio() + ", tï¿½ " + v.getQuantitatGent() + " visitants."));
+        }*/
 
     /**
      * Es fa el mateix que a l'anterior. En aquest cas es mostra la seguretat de
-     * cada atracci�.
+     * cada atracciï¿½.
      */
     public static void infoAtraccions(HashMap<Integer,Atraccio> atraccions) {
         System.out.println("Seguretat de les atraccions:");
-        for (int i = 0; i < atraccions.size(); i++) {
-            System.out.println("Atracci� " + atraccions.get(i).getNomAtraccio() + ", t� " + atraccions.get(i).getSeguretatAtraccio() + ".");
-        }
+        //for (int i = 0; i < atraccions.size(); i++) {
+        	atraccions.forEach((k,v) -> System.out.println("Atracci� " + v.getNomAtraccio() + ", t� " + v.getSeguretatAtraccio() + ".")); //ï¿½S DE LAMBDES
     }
 
     /**
-     * Es recorre l'array l'empleats i es mostra tota la informaci� d'aquests
-     * @throws IOException 
+     * Es recorre l'array l'empleats i es mostra tota la informaciï¿½ d'aquests
+     * @throws IO 
      */
     public static void infoTreballadors(ArrayList<Empleat> empleats) throws IOException {
-        /* for (int i = 0; i < empleats.size(); i++) {
-            System.out.println(empleats.get(i).toString() + ".");
-        } */
-    	
     	String cadena;
     	File fitxer = new File("empleat.txt");
     	if(fitxer.exists()) {
@@ -583,31 +890,33 @@ public class Principal {
 			}
 			b.close();
     	}
-    	
     }
 
     /**
-     * Funci� per a pujar a una atracci�. Primer es comprova el n�mero de
-     * visitant i despr�s es demana l'atracci� a la que es vol pujar. Si les
-     * condicions es compleixen, el visitant podr� pujar a l'atracci�.
+     * Funciï¿½ per a pujar a una atracciï¿½. Primer es comprova el nï¿½mero de
+     * visitant i desprï¿½s es demana l'atracciï¿½ a la que es vol pujar. Si les
+     * condicions es compleixen, el visitant podrï¿½ pujar a l'atracciï¿½.
      */
     public static void pujarAtraccio(ParcAtraccio p) {
-    	ArrayList<Visitant> visitants = p.getVisitants();
+        ArrayList<Visitant> visitants = p.getVisitants();
         Scanner input = new Scanner(System.in);
         String a, e;
         int resposta;
         boolean potPujar = false,nomIncorrecte = false;
-        System.out.println("Identificat amb el ID de visitant");
+        System.out.println("Identificat amb el nombre de visitant");
         resposta = input.nextInt();
-        System.out.println("Introdueix el nom de l'atracci� a la que vols pujar: ");
-        for (int i = 0; i < p.getAtraccions().size(); i++) {
-        	System.out.println(p.getAtraccions().get(i).getNomAtraccio().toString());
+        Visitant v = null;
+        for (int i = 0; i < visitants.size(); i++) {
+            if (visitants.get(i).getNumVisitant() == resposta) {
+            	v = visitants.get(i);
+            }
         }
+        System.out.println("Introdueix el nom de l'atracci� a la que vols pujar");
         a = input.nextLine();
         a = input.nextLine();
         Atraccio atr = null;
-        //En aquest primer for es comprova que l'atracci� introdu�da �s correcte.
-        for (int i = 0; i < p.getAtraccions().size(); i++) {
+        //En aquest primer for es comprova que l'atracciï¿½ introduï¿½da ï¿½s correcte.
+        for (int i = 1; i < p.getAtraccions().size()+1; i++) {
             if (p.getAtraccions().get(i).getNomAtraccio().toString().equals(a)) {
                 atr = p.getAtraccions().get(i);
                 nomIncorrecte = true;
@@ -617,42 +926,38 @@ public class Principal {
             System.out.println("Nom de l'atracci� incorrecte!");
         }
         
-        //En aquest for hi ha un condicional el qual comprova el n�mero de visitant, que es compleixen els requisits (altura) per a pujar i que es tracta d'un objecte en aquest cas Estandar
+        ComprovarAltura<Visitant,Atraccio> ca = new ComprovarAltura<Visitant,Atraccio>(v,atr);
+        ca.alturaComprovada();
         
-        Iterator<Visitant> vis = p.getVisitants().iterator();
-        Visitant i = vis.next();
-        if(vis.hasNext()) {
-        	if (i.getNumVisitant() == resposta && p.getEmpleats().get(0).comprovaEntrada(i).equals("OK") && i.getEntrada() instanceof Estandar) {
-                Estandar entradaEstandar = (Estandar) i.getEntrada();
-                entradaEstandar.controlAtraccionsEstandar(i);
-                System.out.println(i.pujarAtraccio(atr, p.getEmpleats().get(0)));
+        //En aquest for hi ha un condicional el qual comprova el nï¿½mero de visitant, que es compleixen els requisits (altura) per a pujar i que es tracta d'un objecte en aquest cas Estandar
+        for (int i = 0; i < visitants.size(); i++) {
+            if (visitants.get(i).getNumVisitant() == resposta && p.getEmpleats().get(0).comprovaEntrada(visitants.get(i)).equals("OK") && visitants.get(i).getEntrada() instanceof Estandar) {
+                Estandar entradaEstandar = (Estandar) visitants.get(i).getEntrada();
+                entradaEstandar.controlAtraccionsEstandar(visitants.get(i));
+                System.out.println(visitants.get(i).pujarAtraccio(atr, p.getEmpleats().get(0)));
                 potPujar = true;
             }
         }
-        
         if(!potPujar){
             System.out.println("No pots pujar a l'atracci� !");
         }
        
-        //Aqu� es fa el mateix que a l'anterior per� amb l'entrada de tipus ExpressPremium
-        
-        Iterator<Visitant> vistants = p.getVisitants().iterator();
-        Visitant g = vistants.next();
-        if(vis.hasNext()) {
-        	if (g.getNumVisitant() == resposta && p.getEmpleats().get(0).comprovaEntrada(g).equals("OK") && g.getEntrada() instanceof ExpressPremium) {
-                ExpressPremium entradaPremium = (ExpressPremium) g.getEntrada();
-                entradaPremium.vegadesPrimeraFila(i);
-                System.out.println(g.pujarPrimeraFilaAtraccio(atr, p.getEmpleats().get(0)));
+        //Aquï¿½ es fa el mateix que a l'anterior perï¿½ amb l'entrada de tipus ExpressPremium
+        for (int i = 1; i < visitants.size(); i++) {
+            if (visitants.get(i).getNumVisitant() == resposta && p.getEmpleats().get(0).comprovaEntrada(visitants.get(i)).equals("OK") && visitants.get(i).getEntrada() instanceof ExpressPremium) {
+                ExpressPremium entradaPremium = (ExpressPremium) visitants.get(i).getEntrada();
+                entradaPremium.vegadesPrimeraFila(visitants.get(i));
+                System.out.println(visitants.get(i).pujarPrimeraFilaAtraccio(atr, p.getEmpleats().get(0)));
                 potPujar = true;
             }
         }
-        //En cas de no poder pujar, surt un av�s
+        //En cas de no poder pujar, surt un avï¿½s
         if(!potPujar){
             System.out.println("No pots pujar a l'atracci� !");
         }
     }
 
-    //Aquesta funci� consulta el nombre de visitants que hi ha al parc en aquell moment.
+    //Aquesta funciï¿½ consulta el nombre de visitants que hi ha al parc en aquell moment.
     static public void consultarNumVisit(ParcAtraccio p) {
         System.out.println("El nombre de visitants del parc �s: " + p.getNumVisitants());
     }

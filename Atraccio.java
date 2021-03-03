@@ -7,7 +7,7 @@ public class Atraccio implements Comparable<Atraccio> {
 	private int quantitatGent;
 	private double alturaMin;
 	
-	public Atraccio(ENomAtraccio nomAtraccio,int quantitatGent, double alturaMin) {
+	public Atraccio(int idAtraccio, ENomAtraccio nomAtraccio,int quantitatGent, double alturaMin) {
 		//this.idAtraccio = idAtraccio;
 		this.nomAtraccio = nomAtraccio;
 		this.quantitatGent = quantitatGent;

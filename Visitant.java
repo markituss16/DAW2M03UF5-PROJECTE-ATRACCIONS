@@ -1,5 +1,7 @@
 package portAventura_atraccions;
 
+import java.util.HashSet;
+
 public class Visitant extends Persona {
 
     private int numVisitant;
@@ -8,6 +10,7 @@ public class Visitant extends Persona {
     private int pujades = 0;
     private int primeraFila = 0;
     private double altura;
+    private HashSet<Atraccio> preferits;
 
     public Visitant(String nom, String cognom, String DNI, int telefon, double altura, int numVisitant, Entrada entrada, double diners, int pujades, int primeraFila) {
         super(nom, cognom, DNI, telefon);
@@ -17,6 +20,7 @@ public class Visitant extends Persona {
         this.pujades = pujades;
         this.primeraFila = primeraFila;
         this.altura = altura;
+        this.preferits = new HashSet<Atraccio>();
     }
 
     public int getNumVisitant() {
@@ -65,6 +69,14 @@ public class Visitant extends Persona {
 
     public void setAltura(double altura) {
         this.altura = altura;
+    }
+
+    public HashSet<Atraccio> getPreferits() {
+        return this.preferits;
+    }
+
+    public void afegeixPreferit(Atraccio a) {
+        this.preferits.add(a);
     }
 
     @Override

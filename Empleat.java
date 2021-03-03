@@ -1,13 +1,17 @@
 package portAventura_atraccions;
 
+import java.util.LinkedHashSet;
+
 public class Empleat extends Persona implements IEmpleat{
 	private int idEmpleat;
 	private ESalariEmpleat salari;
+	private LinkedHashSet<Atraccio> vigilancia;
 	
 	public Empleat(String nom, String cognom, String DNI, int telefon, int idEmpleat, ESalariEmpleat salari) {
 		super(nom, cognom, DNI, telefon);
 		this.idEmpleat = idEmpleat;
 		this.salari = salari;
+		this.vigilancia = new LinkedHashSet<Atraccio>();
 	}
 
 	public int getIdEmpleat() {
@@ -25,6 +29,14 @@ public class Empleat extends Persona implements IEmpleat{
 	public void setSalari(ESalariEmpleat salari) {
 		this.salari = salari;
 	}
+
+	public LinkedHashSet<Atraccio> getVigilancia() {
+        return this.vigilancia;
+    }
+
+    public void afegeixVigilancia(Atraccio a) {
+        this.vigilancia.add(a);
+    }
 
 	@Override
 	public String toString() {
@@ -57,3 +69,4 @@ public class Empleat extends Persona implements IEmpleat{
         return "Fer fora";
     }
 }
+     

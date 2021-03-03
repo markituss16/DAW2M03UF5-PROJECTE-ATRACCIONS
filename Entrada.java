@@ -19,7 +19,7 @@ public abstract class Entrada implements Cloneable {
     public Entrada() {
     }
 
-    public long getIdEntrada() {
+    public int getIdEntrada() {
         return idEntrada;
     }
 

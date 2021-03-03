@@ -2,7 +2,7 @@ package portAventura_atraccions;
 import java.util.*;
 import java.io.*;
 
-public class ParcAtraccio{
+public class ParcAtraccio {
 	private LinkedList<Entrada> entrades = new LinkedList<Entrada>();
     private ArrayList<Visitant> visitants = new ArrayList<Visitant>();
     private ArrayList<Empleat> empleats = new ArrayList<Empleat>();
@@ -83,8 +83,8 @@ public class ParcAtraccio{
     public String toString() {
         return "ParcAtraccio{" + "entrades=" + entrades + ", visitants=" + visitants + ", empleats=" + empleats + ", atraccions=" + atraccions + ", nom=" + nom + ", horariObertura=" + horariObertura + ", numVisitants=" + numVisitants + ", nombreAtraccions=" + nombreAtraccions + '}';
     }
-
-	/*MÈTODES PROPIS*/
+    
+    /*MÃ‰TODES PROPIS*/
 	
 	public void afegirEntrada(Entrada e) throws IOException{
 		this.entrades.add(e);
@@ -183,9 +183,9 @@ public class ParcAtraccio{
 	}
 	
     /**
-     * Mètode per a realitzar la compra de l'entrada
+     * MÃ©tode per a realitzar la compra de l'entrada
      * Elimina una entrada de la llista d'entrades cada cop que es compra una.
-     * Si no es correspon amb cap entrada surt una excepció
+     * Si no es correspon amb cap entrada surt una excepciÃ³
      */
 	public void comprarEntrada(int id) {
 		try {
@@ -193,7 +193,7 @@ public class ParcAtraccio{
 				Entrada e = c.next();
 				if (e.getIdEntrada() == id) {
 					c.remove();
-					System.out.println("L'entrada " + e.getIdEntrada() + " ha sigut comprada amb èxit!");
+					System.out.println("L'entrada " + e.getIdEntrada() + " ha sigut comprada amb Ã¨xit!");
 				};
 			}
 		}catch(Exception ex) {
@@ -202,7 +202,7 @@ public class ParcAtraccio{
 		}
 	}
 	
-	//Mètode per assignar el número de visitants que hi ha.
+	//MÃ©tode per assignar el nÃºmero de visitants que hi ha.
     private void assignaNumVisitants(){
     	this.numVisitants = visitants.size();
     }
